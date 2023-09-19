@@ -11,7 +11,7 @@
 
 (def not-found
   {:status 404
-   :body {:error "Page not found"}})
+   :body {:error "with-http: page not found"}})
 
 
 (defn make-url

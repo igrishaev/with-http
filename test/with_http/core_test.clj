@@ -65,4 +65,4 @@
                            :coerce :always}))]
 
     (is (= 404 status))
-    (is (= {:error "Page not found"} body))))
+    (is (= {:error "with-http: page not found"} body))))
