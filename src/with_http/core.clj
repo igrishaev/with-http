@@ -14,6 +14,13 @@
    :body {:error "Page not found"}})
 
 
+(defn make-url
+  ([port]
+   (make-url port "/"))
+  ([port path]
+   (format "http://localhost:%s%s" port path)))
+
+
 (defn make-app [method->path->response]
   (fn [request]
 
