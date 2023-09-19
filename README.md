@@ -1,16 +1,24 @@
 # with-http
 
-FIXME: description
+A macro to stub HTTP calls with local networking interaction.
 
 ## Installation
 
-Download from http://example.com/FIXME.
+Lein:
+
+```clojure
+[com.github.igrishaev/with-http "0.1.0"]
+```
+
+Deps.edn
+
+```clojure
+{com.github.igrishaev/with-http {:mvn/version "0.1.0"}}
+```
 
 ## Usage
 
-FIXME: explanation
-
-    $ java -jar with-http-0.1.0-standalone.jar [args]
+TODO
 
 ## License
 
