@@ -1,5 +1,6 @@
 (ns with-http.core-test
   (:require
+   [clojure.java.io :as io]
    [clj-http.client :as client]
    [clojure.test :refer [deftest is]]
    [with-http.core :refer [with-http make-url]]))
@@ -65,4 +66,82 @@
                            :coerce :always}))]
 
     (is (= 404 status))
-    (is (= {:error "with-http: page not found"} body))))
+    (is (= {:error "with-http: route not found"} body))))
+
+
+(deftest test-with-http-file-txt
+
+  (let [app
+        {:get {"/foo" (io/file "resources/test.txt")}}
+
+        url
+        (make-url PORT "/foo?a=1&b=2")
+
+        {:keys [status headers body]}
+        (with-http [PORT app]
+          (client/get url))
+
+        {:strs [Content-Type]}
+        headers]
+
+    (is (= 200 status))
+    (is (= "text/plain" Content-Type))
+    (is (= "123456\n" body))))
+
+
+(deftest test-with-http-file-json
+
+  (let [app
+        {:get {"/foo" (io/file "resources/test.json")}}
+
+        url
+        (make-url PORT "/foo?a=1&b=2")
+
+        {:keys [status headers body]}
+        (with-http [PORT app]
+          (client/get url {:as :json}))
+
+        {:strs [Content-Type]}
+        headers]
+
+    (is (= 200 status))
+    (is (= "application/json" Content-Type))
+    (is (= {:foo [1 2 3]} body))))
+
+
+(deftest test-with-http-resource-json
+
+  (let [app
+        {:get {"/foo" (io/resource "test.json")}}
+
+        url
+        (make-url PORT "/foo?a=1&b=2")
+
+        {:keys [status headers body]}
+        (with-http [PORT app]
+          (client/get url {:as :json}))
+
+        {:strs [Content-Type]}
+        headers]
+
+    (is (= 200 status))
+    (is (= "application/json" Content-Type))
+    (is (= {:foo [1 2 3]} body))))
+
+
+(deftest test-with-http-custom-default
+
+  (let [app
+        {:get {"/foo" {:status 200 :body "hello"}}
+         :default (fn [_]
+                    {:status 202 :body "I'm the default!"})}
+
+        url
+        (make-url PORT "/test")
+
+        {:keys [status body]}
+        (with-http [PORT app]
+          (client/get url))]
+
+    (is (= 202 status))
+    (is (= "I'm the default!" body))))
