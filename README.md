@@ -3,6 +3,25 @@
 A powerful macro to stub HTTP calls with a local Jetty server. Declarative,
 flexible, and extremely useful.
 
+**ToC**
+
+<!-- toc -->
+
+- [Installation](#installation)
+- [Why](#why)
+- [Usage](#usage)
+  * [Basic](#basic)
+  * [Maps and functions](#maps-and-functions)
+  * [JSON](#json)
+  * [Files](#files)
+  * [Resources](#resources)
+  * [Capturing requests](#capturing-requests)
+  * [Vector paths](#vector-paths)
+  * [Default handler](#default-handler)
+- [License](#license)
+
+<!-- tocstop -->
+
 ## Installation
 
 Lein:
@@ -17,9 +36,53 @@ Deps.edn
 {com.github.igrishaev/with-http {:mvn/version "0.1.0"}}
 ```
 
+Pay attention: since the library is mostly used for tests, put the dependency in
+the corresponding profile or alias. Storing it in global dependencies is not a
+good idea is it becomes a part of the production code.
+
+## Why
+
+
 ## Usage
 
-TODO
+~~~clojure
+(ns some.test-namespace
+  (:require
+   [clj-http.client :as client]
+   [clojure.test :refer [deftest is]]
+   [with-http.core :refer [with-http make-url]]))
+~~~
+
+~~~clojure
+(deftest test-local-server
+
+  (let [app
+        {"/foo" {:get {:status 200
+                       :body {:hello [1 "test" true]}}}}
+
+        {:keys [status body]}
+        (with-http [8080 app]
+          (client/get "http://localhost:8080/foo" {:as :json}))]
+
+    (is (= 200 status))
+    (is (= {:hello [1 "test" true]} body))))
+~~~
+
+### Basic
+
+### Maps and functions
+
+### JSON
+
+### Files
+
+### Resources
+
+### Capturing requests
+
+### Vector paths
+
+### Default handler
 
 ## License
 
