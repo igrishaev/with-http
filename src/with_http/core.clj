@@ -30,7 +30,11 @@
   ([port]
    (make-url port "/"))
   ([port path]
-   (format "http://localhost:%s%s" port path)))
+   (let [path-str
+         (if (sequential? path)
+           (make-path path)
+           path)]
+     (format "http://localhost:%s%s" port path-str))))
 
 
 (defn file? [x]

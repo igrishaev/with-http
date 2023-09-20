@@ -149,12 +149,15 @@
 
 (deftest test-with-http-vector-path
 
-  (let [app
-        {["/foo/bar" 42 "test"]
+  (let [path
+        ["/foo/bar" 42 "test"]
+
+        app
+        {path
          {:get {:status 200 :body "hello"}}}
 
         url
-        (make-url PORT "/foo/bar/42/test")
+        (make-url PORT path)
 
         {:keys [status body]}
         (with-http [PORT app]
