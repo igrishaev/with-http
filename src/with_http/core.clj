@@ -14,7 +14,6 @@
    [ring.middleware.params :refer [wrap-params]]
    [ring.util.mime-type :as mime-type]))
 
-;; rename resources
 
 (def NOT-FOUND
   {:status 404

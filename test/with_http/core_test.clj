@@ -72,7 +72,7 @@
 (deftest test-with-http-file-txt
 
   (let [app
-        {"/foo" {:get (io/file "resources/test.txt")}}
+        {"/foo" {:get (io/file "dev-resources/test.txt")}}
 
         url
         (make-url PORT "/foo?a=1&b=2")
@@ -92,7 +92,7 @@
 (deftest test-with-http-file-json
 
   (let [app
-        {"/foo" {:get (io/file "resources/test.json")}}
+        {"/foo" {:get (io/file "dev-resources/test.json")}}
 
         url
         (make-url PORT "/foo?a=1&b=2")
