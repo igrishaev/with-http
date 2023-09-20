@@ -150,7 +150,7 @@
 (deftest test-with-http-vector-path
 
   (let [app
-        {["foo" "bar" 42 "test"]
+        {["/foo/bar" 42 "test"]
          {:get {:status 200 :body "hello"}}}
 
         url

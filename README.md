@@ -1,6 +1,7 @@
 # with-http
 
-A macro to stub HTTP calls with local networking interaction.
+A powerful macro to stub HTTP calls with a local Jetty server. Declarative,
+flexible, and extremely useful.
 
 ## Installation
 

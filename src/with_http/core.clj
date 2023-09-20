@@ -23,8 +23,7 @@
 (defn make-path [parts]
   (->> parts
        (map str)
-       (interleave (repeat \/))
-       (str/join)))
+       (str/join "/")))
 
 
 (defn make-url
