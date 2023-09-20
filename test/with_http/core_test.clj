@@ -15,7 +15,7 @@
         {:hello [1 "test" true]}
 
         app
-        {:get {"/foo" {:status 200
+        {"/foo" {:get {:status 200
                        :body body}}}
 
         url
@@ -35,7 +35,7 @@
         (atom nil)
 
         app
-        {:get {"/foo" (fn [{:keys [params]}]
+        {"/foo" {:get (fn [{:keys [params]}]
                         (reset! capture! params)
                         {:status 200 :body "OK"})}}
 
@@ -54,7 +54,7 @@
 (deftest test-with-http-not-found
 
   (let [app
-        {:get {"/foo" {:status 200 :body "OK"}}}
+        {"/foo" {:get {:status 200 :body "OK"}}}
 
         url
         (make-url PORT "/dunno/lol")
@@ -72,7 +72,7 @@
 (deftest test-with-http-file-txt
 
   (let [app
-        {:get {"/foo" (io/file "resources/test.txt")}}
+        {"/foo" {:get (io/file "resources/test.txt")}}
 
         url
         (make-url PORT "/foo?a=1&b=2")
@@ -92,7 +92,7 @@
 (deftest test-with-http-file-json
 
   (let [app
-        {:get {"/foo" (io/file "resources/test.json")}}
+        {"/foo" {:get (io/file "resources/test.json")}}
 
         url
         (make-url PORT "/foo?a=1&b=2")
@@ -112,7 +112,7 @@
 (deftest test-with-http-resource-json
 
   (let [app
-        {:get {"/foo" (io/resource "test.json")}}
+        {"/foo" {:get (io/resource "test.json")}}
 
         url
         (make-url PORT "/foo?a=1&b=2")
@@ -132,7 +132,7 @@
 (deftest test-with-http-custom-default
 
   (let [app
-        {:get {"/foo" {:status 200 :body "hello"}}
+        {"/foo" {:get {:status 200 :body "hello"}}
          :default (fn [_]
                     {:status 202 :body "I'm the default!"})}
 
@@ -145,3 +145,20 @@
 
     (is (= 202 status))
     (is (= "I'm the default!" body))))
+
+
+(deftest test-with-http-vector-path
+
+  (let [app
+        {["foo" "bar" 42 "test"]
+         {:get {:status 200 :body "hello"}}}
+
+        url
+        (make-url PORT "/foo/bar/42/test")
+
+        {:keys [status body]}
+        (with-http [PORT app]
+          (client/get url))]
+
+    (is (= 200 status))
+    (is (= "hello" body))))

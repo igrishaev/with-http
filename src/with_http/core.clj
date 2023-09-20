@@ -1,4 +1,5 @@
 (ns with-http.core
+  (:refer-clojure :exclude [update-keys])
   (:import
    java.io.File
    java.net.URL)
@@ -13,14 +14,18 @@
    [ring.middleware.params :refer [wrap-params]]
    [ring.util.mime-type :as mime-type]))
 
-
-;; vector path
-;; path get handler
 ;; rename resources
 
 (def NOT-FOUND
   {:status 404
    :body {:error "with-http: route not found"}})
+
+
+(defn make-path [parts]
+  (->> parts
+       (map str)
+       (interleave (repeat \/))
+       (str/join)))
 
 
 (defn make-url
@@ -54,11 +59,11 @@
      :headers {"Content-Type" content-type}}))
 
 
-(defn make-app [method->path->response]
+(defn make-app [path->method->response]
   (fn [request]
 
     (let [{:keys [default]}
-          method->path->response
+          path->method->response
 
           {:keys [params]}
           request
@@ -72,8 +77,8 @@
                      uri params)
 
           response
-          (get-in method->path->response
-                  [request-method uri]
+          (get-in path->method->response
+                  [uri request-method]
                   default)]
 
       (cond
@@ -100,11 +105,31 @@
     (assoc routes :default NOT-FOUND)))
 
 
+;; for old Clojure versions
+(defn update-keys
+  [m f]
+  (let [ret (persistent!
+             (reduce-kv (fn [acc k v] (assoc! acc (f k) v))
+                        (transient {})
+                        m))]
+    (with-meta ret (meta m))))
+
+
+(defn compile-paths [routes]
+  (update-keys routes (fn [path]
+                        (if (sequential? path)
+                          (make-path path)
+                          path))))
+
+
 (defmacro with-http
-  [[port method->path->response] & body]
-  `(let [app# (-> ~method->path->response
+  [[port path->method->response] & body]
+  `(let [app# (-> ~path->method->response
+                  ;; prepare routes
+                  compile-paths
                   add-default
                   make-app
+                  ;; ring wrappers
                   wrap-keyword-params
                   wrap-json-params
                   wrap-multipart-params
