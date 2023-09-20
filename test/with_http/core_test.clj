@@ -150,7 +150,7 @@
 (deftest test-with-http-vector-path
 
   (let [path
-        ["/foo/bar" 42 "test"]
+        ["/foo/bar/" 42 "/test"]
 
         app
         {path

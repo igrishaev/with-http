@@ -23,7 +23,7 @@
 (defn make-path [parts]
   (->> parts
        (map str)
-       (str/join "/")))
+       (str/join)))
 
 
 (defn make-url
@@ -98,7 +98,9 @@
         (resource-response response)
 
         :else
-        (throw (new Exception "Wrong response type"))))))
+        (do
+          (log/errorf "Wrong response type: %s" response)
+          {:status 500 :body "wrong response type"})))))
 
 
 (defn add-default [routes]
