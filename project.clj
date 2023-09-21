@@ -1,4 +1,4 @@
-(defproject com.github.igrishaev/with-http "0.1.1"
+(defproject com.github.igrishaev/with-http "0.1.2-SNAPSHOT"
 
   :description
   "FIXME: write description"
