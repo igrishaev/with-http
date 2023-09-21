@@ -61,6 +61,12 @@
      :headers {"Content-Type" content-type}}))
 
 
+(defn string-response [^String string]
+  {:status 200
+   :body string
+   :headers {"Content-Type" "text/plain"}})
+
+
 (defn make-app [path->method->response]
   (fn [request]
 
@@ -96,6 +102,9 @@
 
         (resource? response)
         (resource-response response)
+
+        (string? response)
+        (string-response response)
 
         :else
         (do

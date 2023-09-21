@@ -165,3 +165,23 @@
 
     (is (= 200 status))
     (is (= "hello" body))))
+
+
+(deftest test-with-http-string-response
+
+  (let [app
+        {"/foo" {:get "AAA"}}
+
+        url
+        (make-url PORT "/foo?a=1&b=2")
+
+        {:keys [status headers body]}
+        (with-http [PORT app]
+          (client/get url))
+
+        {:strs [Content-Type]}
+        headers]
+
+    (is (= 200 status))
+    (is (= "text/plain" Content-Type))
+    (is (= "AAA" body))))
