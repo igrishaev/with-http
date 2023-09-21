@@ -26,13 +26,13 @@ now it's time to ship it as a standalone library.
 Lein:
 
 ```clojure
-[com.github.igrishaev/with-http "0.1.0"]
+[com.github.igrishaev/with-http "0.1.1"]
 ```
 
 Deps.edn
 
 ```clojure
-{com.github.igrishaev/with-http {:mvn/version "0.1.0"}}
+{com.github.igrishaev/with-http {:mvn/version "0.1.1"}}
 ```
 
 *Pay attention*: since the library is primarily used for tests, put the
